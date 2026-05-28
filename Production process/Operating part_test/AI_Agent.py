@@ -1,7 +1,7 @@
 from google import genai
 from google.genai import types
 
-client = genai.Client(api_key="AIzaSyAjHO0WUocDVNcP8VAdeh4kWAVzN9wx-zA")
+client = genai.Client(api_key="your_API")
 
 def call_agent( context_data = None, user = None):
     if user is not None:
