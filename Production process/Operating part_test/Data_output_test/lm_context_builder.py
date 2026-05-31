@@ -43,7 +43,12 @@ def build_lm_context(snapshot):
                 "drs_allowed": "False",
                 "drs_engaged": "False"
             },
-            # [추가] 에어로 파츠 파손 상태 구조체 신설
+            # [추가됨] 현재 타이어 상태 진단 구조체
+            "tyre_health": {
+                "wear_percent": {"FL": 0.0, "FR": 0.0, "RL": 0.0, "RR": 0.0},
+                "overall_status": "Unknown",
+                "grip_evaluation": "Unknown"
+            },
             "aero_damage": {
                 "front_left_wing_wear_percent": 0,
                 "front_right_wing_wear_percent": 0,
@@ -106,7 +111,7 @@ def build_lm_context(snapshot):
     context["race_context"]["car_status"]["drs_allowed"] = "True" if stat.get('m_drsAllowed', 0) == 1 else "False"
     context["race_context"]["car_status"]["drs_engaged"] = "True" if telemetry.get('m_drs', 0) == 1 else "False"
     
-    # 3. [핵심 수정] 에어로 파츠 파손 파싱 로직 주입
+    # 3. 에어로 파츠 파손 파싱 로직
     fl_wing = dmg.get('m_frontLeftWingDamage', 0)
     fr_wing = dmg.get('m_frontRightWingDamage', 0)
     r_wing = dmg.get('m_rearWingDamage', 0)
@@ -179,19 +184,43 @@ def build_lm_context(snapshot):
         status_text = "위험 (70% 이상)" if wear >= 70 else "주의 (50% 이상)" if wear >= 50 else "양호"
         context["power_unit_status"][comp] = {"wear_percent": wear, "status": status_text}
 
-    # 8. 타이어 물리 데이터 상세화
-    context["raw_tyres_wear"] = [
-        dmg.get('m_tyresWear', [0,0,0,0])[0],
-        dmg.get('m_tyresWear', [0,0,0,0])[1],
-        dmg.get('m_tyresWear', [0,0,0,0])[2],
-        dmg.get('m_tyresWear', [0,0,0,0])[3]
-    ]
+    # 8. [핵심 수정됨] 타이어 상태 진단 및 원시 데이터 주입
+    tyres_wear = dmg.get('m_tyresWear', [0.0, 0.0, 0.0, 0.0])
     
+    # 예측용 원시 데이터 배열 유지
+    context["raw_tyres_wear"] = [tyres_wear[0], tyres_wear[1], tyres_wear[2], tyres_wear[3]]
+    
+    # LLM 정성 평가용 텍스트 변환 로직
+    max_wear = max(tyres_wear)
+    if max_wear >= 75:
+        overall_status = "위험 (CRITICAL)"
+        grip_eval = "타이어 펑처 임박. 즉시 피트인 해야 함."
+    elif max_wear >= 50:
+        overall_status = "경고 (WARNING)"
+        grip_eval = "그립 저하 심각. 랩타임 손실 발생 중."
+    elif max_wear >= 30:
+        overall_status = "주의 (NOTICE)"
+        grip_eval = "마모가 꽤 진행됨. 타이어 관리 필요."
+    else:
+        overall_status = "양호 (GOOD)"
+        grip_eval = "최적의 그립 유지 중. 푸시 가능."
+
+    context["race_context"]["tyre_health"] = {
+        "wear_percent": {
+            "FL": round(tyres_wear[0], 1),
+            "FR": round(tyres_wear[1], 1),
+            "RL": round(tyres_wear[2], 1),
+            "RR": round(tyres_wear[3], 1)
+        },
+        "overall_status": overall_status,
+        "grip_evaluation": grip_eval
+    }
+
+    # 9. 텔레메트리 및 드라이버 입력 제어 정보
     context["raw_telemetry"]["tyre_surface_temp"] = list(telemetry.get('m_tyresSurfaceTemperature', [0,0,0,0]))
     context["raw_telemetry"]["tyre_inner_temp"] = list(telemetry.get('m_tyresInnerTemperature', [0,0,0,0]))
     context["raw_telemetry"]["brake_temp"] = list(telemetry.get('m_brakesTemperature', [0,0,0,0]))
 
-    # 9. 드라이버 입력 제어 정보
     context["raw_telemetry"]["speed"] = telemetry.get('m_speed', 0)
     context["raw_telemetry"]["throttle"] = round(telemetry.get('m_throttle', 0.0), 2)
     context["raw_telemetry"]["brake"] = round(telemetry.get('m_brake', 0.0), 2)
