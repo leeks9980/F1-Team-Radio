@@ -5,7 +5,7 @@ from pydantic import BaseModel
 import uvicorn
 
 # TTS 엔진 로드 (사전 세팅된 클래스)
-from run_tts import LocalTTSEngine
+from tts_engine import LocalTTSEngine
 
 app = FastAPI()
 tts_engine = None
@@ -17,7 +17,7 @@ class SpeechRequest(BaseModel):
 def startup_event():
     global tts_engine
     print("🔊 [TTS 서버] 엔진 로드 및 VRAM 적재 중...")
-    DUMMY_SPEAKER_PATH = r"C:\Users\lijih\Downloads\test_3.wav" 
+    DUMMY_SPEAKER_PATH = r"D:\code\F1_Team_Radio\Production process\TTS\cloning voice_1.wav" 
     tts_engine = LocalTTSEngine(speaker_wav_path=DUMMY_SPEAKER_PATH)
     print("🔊 [TTS 서버] 가동 준비 완료. 포트 8000에서 대기 중.")
 
