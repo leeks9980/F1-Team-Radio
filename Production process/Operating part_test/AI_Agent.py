@@ -1,14 +1,17 @@
 from google import genai
 from google.genai import types
 
-client = genai.Client(api_key="your_API")
+# 주의: 실제 서비스 환경에서는 API 키를 코드에 직접 작성하지 말고 환경 변수로 분리하십시오.
+client = genai.Client(api_key="your_api")
 
-def call_agent( context_data = None, user = None):
-    if user is not None:
-        user_input = user
+def call_agent(context_data=None, user=None):
+    # None 값일 경우 빈 문자열로 처리하여 UnboundLocalError 방지
+    user_input = user if user is not None else ""
+    context_data = context_data if context_data is not None else ""
 
-    response = client.models.generate_content_stream(
-        model="gemini-3.5-flash",
+    # generate_content_stream 대신 generate_content 사용
+    response = client.models.generate_content(
+        model="gemma-4-26b-a4b-it",
         config=types.GenerateContentConfig(
             system_instruction='''
             너는 F1 레이싱 팀의 노련하고 침착한 레이스 엔지니어다.
@@ -18,11 +21,12 @@ def call_agent( context_data = None, user = None):
             - 짧고 명확한 한국어 반말(친근한 표현)을 사용한다.
             - 존댓말이나 불필요한 인사말은 생략하고 핵심만 전달한다.
             - 차갑게 명령하기보다는, 상황을 공유하고 행동을 지시하는 담백한 어조를 유지한다. (예: "명령한다" -> "이렇게 가자")
+            - .과 같은 기호는 사용하지 말것
 
             [대응 지침]
             - 드라이버가 감정적으로 흔들려도 너는 동요하지 않고 차분히 대응한다.
             - '데이터(팩트)'와 '해결책'만 간결하게 제시한다.
-            - 감정적인 부분은 오느정도의 위로를 한다.
+            - 감정적인 부분은 어느정도의 위로를 한다.
             - 답변은 3문장을 넘기지 않도록 최대한 압축한다.
 
             [핵심 근거]
@@ -30,10 +34,9 @@ def call_agent( context_data = None, user = None):
             '''
         ),
         contents=[
-        types.Part.from_text(text=f"[CONTEXT/SITUATION]\n{context_data}"),
-        types.Part.from_text(text=f"[USER INPUT]\n{user_input}")
-    ]
+            types.Part.from_text(text=f"[CONTEXT/SITUATION]\n{context_data}"),
+            types.Part.from_text(text=f"[USER INPUT]\n{user_input}")
+        ]
     )   
 
-    for chunk in response:
-        print(chunk.text, end="", flush=True)
+    return response.text
