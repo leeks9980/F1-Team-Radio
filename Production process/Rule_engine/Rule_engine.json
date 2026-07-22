@@ -1,0 +1,145 @@
+[
+    {
+        "term":"Lift and Coast",    
+        "priority":90,              
+        "condition":{               
+            "fuel_delta":"<0",
+            "rear_temp":">110"
+        }
+    },
+    {
+        "term":"Undercut",
+        "priority":90,
+        "condition":{
+            "raw_tyres_wear":">35",
+            "delta_to_front":">2"
+        }
+    },
+    {
+        "term":"Overcut",
+        "priority":90,
+        "condition":{
+            "raw_tyres_wear": "<45",
+            "delta_to_front": ">3.0"
+        }
+    },
+    {
+        "term":"Box, Box",
+        "priority":90,
+        "condition":{
+            "raw_tyres_wear":">80",
+            "front_left_wing_wear_percent": ">80",
+            "front_right_wing_wear_percent": ">80"
+        }
+    },
+    {
+        "term":"Track Limits",
+        "priority":90,
+        "condition":{
+            "track_limits_warnings": "1"
+        }
+    },
+    {
+        "term":"Dirty Air",
+        "priority":90,
+        "condition":{
+            "delta_to_front": "<2.0"
+        }
+    },
+    {
+        "term":"Clean Air",
+        "priority":90,
+        "condition":{
+            "delta_to_front": ">3.5"
+        }
+    },
+    {
+        "term":"DRS",
+        "priority":90,
+        "condition":{
+            "drs_allowed": "ture"
+        }
+    },
+    {
+        "term":"ERS",
+        "priority":90,
+        "condition":{
+            "ers_energy_joules": ">80.0"
+        }
+    },
+    {
+        "term":"over take",
+        "priority":90,
+        "condition":{
+            "ers_energy_joules": ">80.0",
+            "drs_allowed": "ture",
+            "delta_to_front": "<0.5"
+
+        }
+    },
+    {
+        "term":"yellow flag",
+        "priority":90,
+        "condition":{
+            "fia_flag": "yellow"
+        }
+    },
+    {
+        "term":"Blue flag",
+        "priority":90,
+        "condition":{
+            "fia_flag": "Blue"
+        }
+    },
+    {
+        "term": "Safety Car",
+        "priority": 100,
+        "condition": {
+            "safety_car_status": "1"
+        }
+    },
+    {
+        "term": "VSC (Virtual Safety Car)",
+        "priority": 100,
+        "condition": {
+            "safety_car_status": "2"
+        }
+    },
+    {
+        "term": "Rain Expected",
+        "priority": 85,
+        "condition": {
+            "rain_percentage": ">50"
+        }
+    },
+    {
+        "term": "Hammertime",
+        "priority": 95,
+        "condition": {
+            "delta_to_front": ">3.0",
+            "delta_to_behind": ">2.0",
+            "raw_tyres_wear": "<30"
+        }
+    },
+    {
+        "term": "Tyre Overheating",
+        "priority": 90,
+        "condition": {
+            "tyres_surface_temperature": ">120"
+        }
+    },
+    {
+        "term": "Pit Window Open",
+        "priority": 80,
+        "condition": {
+            "current_lap": "pit_stop_window_ideal_lap"
+        }
+    },
+    {
+        "term": "Engine Issue",
+        "priority": 100,
+        "condition": {
+            "engine_damage": ">50"
+        }
+    }
+]

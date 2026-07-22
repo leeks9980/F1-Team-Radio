@@ -1,0 +1,64 @@
+{
+  "race_context": {
+    "session_info": {
+      "track_name": "Silverstone",
+      "session_type": "R",
+      "track_temp_celsius": 28,
+      "air_temp_celsius": 22
+    },
+    "progress": {
+      "current_lap": 15,
+      "total_laps": 52,
+      "safety_car": "None"
+    },
+    "car_status": {
+      "tyre_compound": "Intermediate",
+      "pit_stops": 1,
+      "ers_energy_joules": 3500000.0,
+      "fuel_delta_laps": 1.25,
+      "drs_allowed": "False",
+      "drs_engaged": "False"
+    },
+    "aero_damage": {
+      "front_left_wing_wear_percent": 0,
+      "front_right_wing_wear_percent": 15,
+      "rear_wing_wear_percent": 0,
+      "floor_wear_percent": 0,
+      "diffuser_wear_percent": 0,
+      "status": "데미지 있음"
+    },
+    "driver_warnings": {
+      "track_limits_warnings": 1,
+      "time_penalty_seconds": 0,
+      "fia_flag": "Green"
+    }
+  },
+  "gaps": {
+    "position": 3,
+    "delta_to_front": 1.250,
+    "front_car_tyre": "Intermediate",
+    "delta_to_behind": 3.420,
+    "behind_car_tyre": "Intermediate"
+  },
+  "power_unit_status": {
+    "Gearbox": {"wear_percent": 32, "status": "양호"},
+    "ICE": {"wear_percent": 45, "status": "양호"},
+    "MGU-K": {"wear_percent": 28, "status": "양호"},
+    "CE": {"wear_percent": 20, "status": "양호"}
+  },
+  "weather_forecast": {
+    "current_condition": "Light Rain",
+    "rain_chance_percent": 60
+  },
+  "raw_tyres_wear": [25.4, 28.1, 15.2, 16.0],
+  "raw_telemetry": {
+    "tyre_surface_temp": [85, 87, 92, 90],
+    "tyre_inner_temp": [80, 82, 85, 84],
+    "brake_temp": [450, 460, 380, 390],
+    "speed": 285,
+    "throttle": 1.0,
+    "brake": 0.0,
+    "gear": 7,
+    "steer": 0.02
+  }
+}
